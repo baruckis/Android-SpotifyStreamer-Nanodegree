@@ -1,0 +1,319 @@
+package com.baruckis.nanodegree.spotifystreamer.fragments;
+
+import android.app.Activity;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ListView;
+
+import com.baruckis.nanodegree.spotifystreamer.Utils;
+import com.baruckis.nanodegree.spotifystreamer.models.CustomArtist;
+import com.baruckis.nanodegree.spotifystreamer.InfoView;
+import com.baruckis.nanodegree.spotifystreamer.R;
+import com.baruckis.nanodegree.spotifystreamer.adapters.ArtistArrayAdapter;
+
+import java.util.ArrayList;
+
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistsPager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
+/**
+ * Created by Andrius-Baruckis on 2015-07-09.
+ * http://www.baruckis.com/
+ */
+
+/**
+ * A list fragment representing a list of Items (Artists). This fragment
+ * also supports tablet devices by allowing list items to be given an
+ * 'activated' state upon selection. This helps indicate which item is
+ * currently being viewed in a {@link ArtistTracksListFragment}.
+ * <p/>
+ * Activities containing this fragment MUST implement the {@link Callbacks}
+ * interface.
+ */
+public class ArtistsListFragment extends ListFragment {
+
+    /**
+     * The serialization (saved instance state) Bundle key representing the
+     * found artists list.
+     */
+    private static final String STATE_ARTISTS_LIST = "artists_list";
+
+    private EditText mSearchEditText;
+    private InfoView mInfoView;
+
+    private SpotifyService mSpotifyService;
+
+    private ArtistArrayAdapter mListAdapter;
+    private ArrayList<CustomArtist> mArtistsList;
+
+    /**
+     * The fragment's current callback object, which is notified of list item
+     * clicks.
+     */
+    private Callbacks mCallbacks = sDummyCallbacks;
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callbacks {
+        /**
+         * Callback for when an item has been selected.
+         */
+        public void onItemSelected(String searchText, String artistId, String artistName);
+
+        /**
+         * Callback for when an text has been changed.
+         */
+        public void onSearchTextChanged();
+    }
+
+    /**
+     * A dummy implementation of the {@link Callbacks} interface that does
+     * nothing. Used only when this fragment is not attached to an activity.
+     */
+    private static Callbacks sDummyCallbacks = new Callbacks() {
+        @Override
+        public void onItemSelected(String searchText, String artistId, String artistName) {
+        }
+
+        public void onSearchTextChanged() {
+        }
+    };
+
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public ArtistsListFragment() {
+
+    }
+
+    /*
+    *   Events
+    * */
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // Activities containing this fragment must implement its callbacks.
+        if (!(activity instanceof Callbacks)) {
+            throw new IllegalStateException("Activity must implement fragment's callbacks.");
+        }
+
+        mCallbacks = (Callbacks) activity;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        SpotifyApi spotifyApi = new SpotifyApi();
+        mSpotifyService = spotifyApi.getService();
+
+        mListAdapter = new ArtistArrayAdapter(getActivity(), new ArrayList<CustomArtist>());
+        setListAdapter(mListAdapter);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_artists_list, container, false);
+
+        mSearchEditText = (EditText) rootView.findViewById(R.id.search_edit_text);
+        mInfoView = (InfoView) rootView.findViewById(R.id.info_view);
+        ViewGroup contentLayout = (ViewGroup) rootView.findViewById(R.id.content_layout);
+
+        contentLayout.addView(view);
+
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Restore the previously serialized artists list.
+        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ARTISTS_LIST)) {
+            mArtistsList = savedInstanceState.getParcelableArrayList(STATE_ARTISTS_LIST);
+            showArtists();
+            return;
+        }
+
+        mInfoView.showEmpty(getString(R.string.info_msg_empty_artists_list_init));
+        resetActionBar();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mSearchEditText.addTextChangedListener(mTextWatcher);
+    }
+
+    @Override
+    public void onPause() {
+        mSearchEditText.removeTextChangedListener(mTextWatcher);
+
+        super.onPause();
+    }
+
+    @Override
+    public void onListItemClick(ListView listView, View view, int position, long id) {
+        super.onListItemClick(listView, view, position, id);
+
+        // Notify the active callbacks interface (the activity, if the
+        // fragment is attached to one) that an item has been selected.
+        CustomArtist clickedArtist = mListAdapter.getItem(position);
+        mCallbacks.onItemSelected(mSearchEditText.getText().toString(), clickedArtist.getId(), clickedArtist.getName());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        // Serialize and persist found artists list.
+        if (mArtistsList != null) {
+            outState.putParcelableArrayList(STATE_ARTISTS_LIST, mArtistsList);
+        }
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        // Reset the active callbacks interface to the dummy implementation.
+        mCallbacks = sDummyCallbacks;
+    }
+
+
+    /*
+   *   Objects
+   * */
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        Boolean block = false;
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            block = (count == after) ? true : false;
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (block || mSpotifyService == null) return;
+
+            getListView().clearChoices();
+            mListAdapter.clear();
+            mInfoView.hide();
+            resetActionBar();
+
+            mCallbacks.onSearchTextChanged();
+
+            if (s.toString().length() == 0) {
+                mArtistsList = null;
+                mInfoView.showEmpty(getString(R.string.info_msg_empty_artists_list_init));
+            } else {
+                mArtistsList = new ArrayList<CustomArtist>();
+                mSpotifyService.searchArtists(s.toString(), searchArtistsCallback);
+            }
+        }
+    };
+
+    private Callback<ArtistsPager> searchArtistsCallback = new Callback<ArtistsPager>() {
+
+        @Override
+        public void success(ArtistsPager artistsPager, Response response) {
+
+            /*  Block filling list with new artists if text entered inside search box is different
+            *   compared to query text for which data response came back.
+            *   This can happen if user change search text inside search box too fast.
+            * */
+            String searchString = mSearchEditText.getText().toString();
+            Uri uri = Uri.parse(response.getUrl());
+            String queryString = uri.getQueryParameter("q");
+
+            if (!searchString.equals(queryString)) return;
+
+            // if OK than fill adapter with new data
+            for (Artist artist : artistsPager.artists.items) {
+                CustomArtist customArtist = new CustomArtist();
+                customArtist.setId(artist.id);
+                customArtist.setName(artist.name);
+                customArtist.setImageUrl(Utils.getImageUrl(artist.images));
+                mArtistsList.add(customArtist);
+            }
+
+            showArtists();
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+
+            // Show error message with ability to for user to restart the call by pressing a button
+            mInfoView.showError(getString(R.string.info_msg_error), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mInfoView.hide();
+                    mSpotifyService.searchArtists(mSearchEditText.getText().toString(), searchArtistsCallback);
+                }
+            });
+        }
+    };
+
+     /*
+    *   Methods
+    * */
+
+    /**
+     * Turns on activate-on-click mode. When this mode is on, list items will be
+     * given the 'activated' state when touched.
+     */
+    public void setActivateOnItemClick(boolean activateOnItemClick) {
+        // When setting CHOICE_MODE_SINGLE, ListView will automatically
+        // give items the 'activated' state when touched.
+        getListView().setChoiceMode(activateOnItemClick
+                ? ListView.CHOICE_MODE_SINGLE
+                : ListView.CHOICE_MODE_NONE);
+    }
+
+    public void restoreSearchEditText(String text) {
+        if (text == null) return;
+
+        mSearchEditText.addTextChangedListener(mTextWatcher);
+        mSearchEditText.setText(text);
+
+        // set the EditText cursor to the end of its text
+        mSearchEditText.setSelection(mSearchEditText.getText().length());
+    }
+
+    private void resetActionBar() {
+        Utils.setActionBar(getActivity(), getString(R.string.app_name), null);
+    }
+
+    private void showArtists() {
+        if (mArtistsList.isEmpty()) {
+            mInfoView.showEmpty(getString(R.string.info_msg_empty_artists_list));
+            return;
+        }
+        Utils.fillAdapter(mListAdapter, mArtistsList);
+    }
+
+}

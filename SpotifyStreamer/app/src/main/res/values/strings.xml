@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Spotify Streamer</string>
+
+    <string name="info_msg_empty_artists_list_init">"Type to search for your favourite artist."</string>
+    <string name="info_msg_empty_artists_list">"Oops! No such artist found."</string>
+    <string name="info_msg_empty_artist_top_tracks_list">"Oops! We couldn't find any top tracks for your selected artist."</string>
+    <string name="info_msg_error">"Sorry, there was an error! Please try again."</string>
+    <string name="info_btn_try_again">"Try Again"</string>
+
+    <plurals name="title_selected_artist_top_tracks">
+        <item quantity="one">"Top %d Track"</item>
+        <item quantity="other">"Top %d Tracks"</item>
+    </plurals>
+
+</resources>
