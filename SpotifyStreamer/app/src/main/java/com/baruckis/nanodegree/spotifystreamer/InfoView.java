@@ -22,9 +22,13 @@ import android.widget.TextView;
 * */
 public class InfoView extends LinearLayout {
 
+    public static final String STATE_IS_ERROR = "is_error";
+
     private ImageView iconImageView;
     private TextView messageTextView;
     private Button button;
+
+    private boolean isError;
 
     public InfoView(Context context) {
         super(context);
@@ -57,6 +61,7 @@ public class InfoView extends LinearLayout {
         iconImageView = (ImageView) findViewById(R.id.icon);
         messageTextView = (TextView) findViewById(R.id.message);
         button = (Button) findViewById(R.id.button);
+        isError = false;
     }
 
     public void showEmpty(String message) {
@@ -64,6 +69,7 @@ public class InfoView extends LinearLayout {
         messageTextView.setText(message);
         iconImageView.setImageDrawable(null);
         button.setVisibility(View.GONE);
+        isError = false;
     }
 
     public void showError(String message, OnClickListener onClickListener) {
@@ -72,9 +78,18 @@ public class InfoView extends LinearLayout {
         messageTextView.setText(message);
         iconImageView.setImageResource(R.drawable.ic_error_outline_black_48dp);
         button.setOnClickListener(onClickListener);
+        isError = true;
     }
 
     public void hide() {
         this.setVisibility(View.GONE);
+    }
+
+    public boolean getIsError() {
+        return isError;
+    }
+
+    public void setIsError(boolean value) {
+        isError = value;
     }
 }

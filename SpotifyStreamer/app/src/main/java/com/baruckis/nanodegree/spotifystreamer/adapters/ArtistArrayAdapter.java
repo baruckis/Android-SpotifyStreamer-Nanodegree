@@ -47,7 +47,14 @@ public class ArtistArrayAdapter extends ArrayAdapter<CustomArtist> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        Picasso.with(getContext()).load(artist.getImageUrl()).into(viewHolder.imageView);
+        // Passing null as a path will not trigger any request but will set a placeholder, if one is specified.
+        // IllegalArgumentException - if path is empty or blank string.
+        try {
+            Picasso.with(getContext()).load(artist.getImageUrl()).into(viewHolder.imageView);
+        } catch (IllegalArgumentException e){
+            viewHolder.imageView.setImageDrawable(null);
+        }
+
         viewHolder.nameTextView.setText(artist.getName());
 
         return convertView;

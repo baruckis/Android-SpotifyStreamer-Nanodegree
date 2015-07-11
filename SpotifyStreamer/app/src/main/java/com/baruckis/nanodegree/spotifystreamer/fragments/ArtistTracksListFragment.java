@@ -101,29 +101,58 @@ public class ArtistTracksListFragment extends ListFragment {
 
         // if view is restored...
         if (savedInstanceState == null) return;
+
+        // check if error message should be shown
+        if (savedInstanceState.containsKey(InfoView.STATE_IS_ERROR) && savedInstanceState.getBoolean(InfoView.STATE_IS_ERROR)){
+            showError();
+        } else if (savedInstanceState.containsKey(STATE_TRACKS_LIST)) {
             // than restore tracks list without call to the web
-            if (savedInstanceState.containsKey(STATE_TRACKS_LIST)) {
-                mTracksList = savedInstanceState.getParcelableArrayList(STATE_TRACKS_LIST);
-                showTracks();
-            }
-            // and restore action bar to show correct information
-            if (savedInstanceState.containsKey(ARG_ACTIVATED_ARTIST_NAME)) {
-                mArtistName = savedInstanceState.getString(ARG_ACTIVATED_ARTIST_NAME);
+            mTracksList = savedInstanceState.getParcelableArrayList(STATE_TRACKS_LIST);
+            showTracks();
+        }
+
+        // restore action bar to show correct information
+        if (savedInstanceState.containsKey(ARG_ACTIVATED_ARTIST_NAME)) {
+            mArtistName = savedInstanceState.getString(ARG_ACTIVATED_ARTIST_NAME);
+            if (mInfoView.getIsError()) {
+                // if it is error screen don't need to count tracks
+                Utils.setActionBar(getActivity(), " ", mArtistName);
+            } else {
                 setActionBar(mListAdapter.getCount(), mArtistName);
             }
+        }
+
+        // restore artist id
+        if (savedInstanceState.containsKey(ARG_ACTIVATED_ARTIST_ID)) {
+            mArtistId = savedInstanceState.getString(ARG_ACTIVATED_ARTIST_ID);
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // when fragment is destroyed...
-        // store tracks list
-        if (mTracksList != null) {
-            outState.putParcelableArrayList(STATE_TRACKS_LIST, mTracksList);
 
+        /*
+        * When fragment is destroyed it is needed to store tracks list for easy
+        * restoration without call to the web. Also it is needed to store artist id and
+        * artist name, because when error is shown and restoration is done if user would
+        * decide to press "Try Again" button, than a new call to the web would require
+        * these values.
+        * */
+        // store artist id required for the call
+        if (mArtistId != null) {
+            outState.putString(ARG_ACTIVATED_ARTIST_ID, mArtistId);
         }
-        // and store artist name
+        // store artist name which will be recreated for the subtitle
         if (mArtistName != null) {
             outState.putString(ARG_ACTIVATED_ARTIST_NAME, mArtistName);
+        }
+        // check if error message is shown and save state if it is
+        if (mInfoView!=null && mInfoView.getIsError()) {
+            outState.putBoolean(InfoView.STATE_IS_ERROR, mInfoView.getIsError());
+
+        } else if (mTracksList != null) {
+            // if everything is ok (no error screen) than store tracks list
+            outState.putParcelableArrayList(STATE_TRACKS_LIST, mTracksList);
         }
 
         super.onSaveInstanceState(outState);
@@ -169,14 +198,7 @@ public class ArtistTracksListFragment extends ListFragment {
 
             @Override
             public void failure(RetrofitError error) {
-
-                // Show error message with ability to for user to restart the call by pressing a button
-                mInfoView.showError(getString(R.string.info_msg_error), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showSelectedArtistTopTracks(mArtistId, mArtistName);
-                    }
-                });
+                showError();
             }
         });
     }
@@ -185,12 +207,14 @@ public class ArtistTracksListFragment extends ListFragment {
         // if text inside search field was changed, than clean everything
         mListAdapter.clear();
         mInfoView.hide();
+        mInfoView.setIsError(false);
         mArtistId = null;
         mArtistName = null;
         mTracksList = null;
     }
 
     private void showTracks() {
+        mInfoView.setIsError(false);
         if (mTracksList.isEmpty()) {
             mInfoView.showEmpty(getString(R.string.info_msg_empty_artist_top_tracks_list));
             return;
@@ -200,5 +224,15 @@ public class ArtistTracksListFragment extends ListFragment {
 
     private void setActionBar(int tracksCount, String artistName) {
         Utils.setActionBar(getActivity(), getResources().getQuantityString(R.plurals.title_selected_artist_top_tracks, tracksCount, tracksCount), artistName);
+    }
+
+    private void showError() {
+        // Show error message with ability to for user to restart the call by pressing a button
+        mInfoView.showError(getString(R.string.info_msg_error), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectedArtistTopTracks(mArtistId, mArtistName);
+            }
+        });
     }
 }

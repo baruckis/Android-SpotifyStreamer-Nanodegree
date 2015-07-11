@@ -29,7 +29,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * Created by Andrius-Baruckis on 2015-07-09.
+ * Created by Andrius-Baruckis on 2015-07-10.
  * http://www.baruckis.com/
  */
 
@@ -138,6 +138,8 @@ public class ArtistsListFragment extends ListFragment {
         ViewGroup contentLayout = (ViewGroup) rootView.findViewById(R.id.content_layout);
 
         contentLayout.addView(view);
+        // after add info view goes behind and becomes unclickable, so that's why it is moved to front.
+        mInfoView.bringToFront();
 
         return rootView;
     }
@@ -146,13 +148,25 @@ public class ArtistsListFragment extends ListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Restore the previously serialized artists list.
-        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ARTISTS_LIST)) {
-            mArtistsList = savedInstanceState.getParcelableArrayList(STATE_ARTISTS_LIST);
-            showArtists();
-            return;
+        if (savedInstanceState != null) {
+
+            // Check if error message should be shown, and if yes than don't continue on other checks and return;
+            if (savedInstanceState.containsKey(InfoView.STATE_IS_ERROR) && savedInstanceState.getBoolean(InfoView.STATE_IS_ERROR)){
+                showError();
+                return;
+            }
+
+            // If the was no error than get artists list, which can be empty or filled with data.
+            // If it is empty than there was no such artists based on search and message for the user will be showed.
+            if (savedInstanceState.containsKey(STATE_ARTISTS_LIST)){
+                // restore the previously serialized artists list.
+                mArtistsList = savedInstanceState.getParcelableArrayList(STATE_ARTISTS_LIST);
+                showArtists();
+                return;
+            }
         }
 
+        // if there was no error or no artist list saved (is null), that means that initial message should be shown
         mInfoView.showEmpty(getString(R.string.info_msg_empty_artists_list_init));
         resetActionBar();
     }
@@ -184,8 +198,14 @@ public class ArtistsListFragment extends ListFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        // Serialize and persist found artists list.
-        if (mArtistsList != null) {
+        // Check if error message is shown and save state if it is.
+        if (mInfoView!=null && mInfoView.getIsError()) {
+            outState.putBoolean(InfoView.STATE_IS_ERROR, mInfoView.getIsError());
+
+        // If artists list is empty or filled with data than save it.
+        // If it is null, means initial search message for user is shown.
+        } else if (mArtistsList != null) {
+            // Serialize and persist found artists list.
             outState.putParcelableArrayList(STATE_ARTISTS_LIST, mArtistsList);
         }
 
@@ -231,7 +251,7 @@ public class ArtistsListFragment extends ListFragment {
                 mArtistsList = null;
                 mInfoView.showEmpty(getString(R.string.info_msg_empty_artists_list_init));
             } else {
-                mArtistsList = new ArrayList<CustomArtist>();
+
                 mSpotifyService.searchArtists(s.toString(), searchArtistsCallback);
             }
         }
@@ -252,6 +272,8 @@ public class ArtistsListFragment extends ListFragment {
 
             if (!searchString.equals(queryString)) return;
 
+            mArtistsList = new ArrayList<CustomArtist>();
+
             // if OK than fill adapter with new data
             for (Artist artist : artistsPager.artists.items) {
                 CustomArtist customArtist = new CustomArtist();
@@ -266,15 +288,7 @@ public class ArtistsListFragment extends ListFragment {
 
         @Override
         public void failure(RetrofitError error) {
-
-            // Show error message with ability to for user to restart the call by pressing a button
-            mInfoView.showError(getString(R.string.info_msg_error), new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mInfoView.hide();
-                    mSpotifyService.searchArtists(mSearchEditText.getText().toString(), searchArtistsCallback);
-                }
-            });
+            showError();
         }
     };
 
@@ -309,11 +323,23 @@ public class ArtistsListFragment extends ListFragment {
     }
 
     private void showArtists() {
+        mInfoView.setIsError(false);
         if (mArtistsList.isEmpty()) {
             mInfoView.showEmpty(getString(R.string.info_msg_empty_artists_list));
             return;
         }
         Utils.fillAdapter(mListAdapter, mArtistsList);
+    }
+
+    private void showError() {
+        // Show error message with ability to for user to restart the call by pressing a button
+        mInfoView.showError(getString(R.string.info_msg_error), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mInfoView.hide();
+                mSpotifyService.searchArtists(mSearchEditText.getText().toString(), searchArtistsCallback);
+            }
+        });
     }
 
 }
