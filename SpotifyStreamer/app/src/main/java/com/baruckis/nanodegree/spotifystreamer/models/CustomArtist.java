@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Andrius-Baruckis on 2015-07-10.
+ * Created by Andrius-Baruckis on 2015.
  * http://www.baruckis.com/
  */
 

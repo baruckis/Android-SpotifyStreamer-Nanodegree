@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * Created by Andrius-Baruckis on 2015-07-10.
+ * Created by Andrius-Baruckis on 2015.
  * http://www.baruckis.com/
  */
 
@@ -24,12 +24,15 @@ public class InfoView extends LinearLayout {
 
     public static final String STATE_IS_ERROR = "is_error";
 
-    private ImageView iconImageView;
-    private TextView messageTextView;
-    private Button button;
+    private ImageView mIconImageView;
+    private TextView mMessageTextView;
+    private Button mButton;
 
-    private boolean isError;
+    private boolean mIsError;
 
+    /*
+     * Constructors
+     * */
     public InfoView(Context context) {
         super(context);
         init();
@@ -53,32 +56,32 @@ public class InfoView extends LinearLayout {
     }
 
     /*
-   *   Methods
-   * */
+     * Methods
+     * */
     private void init() {
         hide();
         inflate(getContext(), R.layout.info_view, this);
-        iconImageView = (ImageView) findViewById(R.id.icon);
-        messageTextView = (TextView) findViewById(R.id.message);
-        button = (Button) findViewById(R.id.button);
-        isError = false;
+        mIconImageView = (ImageView) findViewById(R.id.icon);
+        mMessageTextView = (TextView) findViewById(R.id.message);
+        mButton = (Button) findViewById(R.id.button);
+        mIsError = false;
     }
 
     public void showEmpty(String message) {
         this.setVisibility(View.VISIBLE);
-        messageTextView.setText(message);
-        iconImageView.setImageDrawable(null);
-        button.setVisibility(View.GONE);
-        isError = false;
+        mMessageTextView.setText(message);
+        mIconImageView.setImageDrawable(null);
+        mButton.setVisibility(View.GONE);
+        mIsError = false;
     }
 
     public void showError(String message, OnClickListener onClickListener) {
         this.setVisibility(View.VISIBLE);
-        button.setVisibility(View.VISIBLE);
-        messageTextView.setText(message);
-        iconImageView.setImageResource(R.drawable.ic_error_outline_black_48dp);
-        button.setOnClickListener(onClickListener);
-        isError = true;
+        mButton.setVisibility(View.VISIBLE);
+        mMessageTextView.setText(message);
+        mIconImageView.setImageResource(R.drawable.ic_error_outline_black_48dp);
+        mButton.setOnClickListener(onClickListener);
+        mIsError = true;
     }
 
     public void hide() {
@@ -86,10 +89,10 @@ public class InfoView extends LinearLayout {
     }
 
     public boolean getIsError() {
-        return isError;
+        return mIsError;
     }
 
     public void setIsError(boolean value) {
-        isError = value;
+        mIsError = value;
     }
 }

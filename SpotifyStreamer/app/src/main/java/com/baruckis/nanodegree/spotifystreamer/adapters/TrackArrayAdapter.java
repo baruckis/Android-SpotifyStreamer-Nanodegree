@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 /**
- * Created by Andrius-Baruckis on 2015-07-10.
+ * Created by Andrius-Baruckis on 2015.
  * http://www.baruckis.com/
  */
 
@@ -27,10 +27,16 @@ public class TrackArrayAdapter extends ArrayAdapter<CustomTrack> {
         TextView albumNameTextView;
     }
 
+    /*
+     * Constructors
+     * */
     public TrackArrayAdapter(Context context, ArrayList<CustomTrack> tracks) {
         super(context, R.layout.list_item_track, tracks);
     }
 
+    /*
+     * Events
+     * */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -52,7 +58,7 @@ public class TrackArrayAdapter extends ArrayAdapter<CustomTrack> {
         // Passing null as a path will not trigger any request but will set a placeholder, if one is specified.
         // IllegalArgumentException - if path is empty or blank string.
         try {
-            Picasso.with(getContext()).load(track.getAlbumImageUrl()).into(viewHolder.imageView);
+            Picasso.with(getContext()).load(track.getAlbumImageSmallUrl()).into(viewHolder.imageView);
         } catch (IllegalArgumentException e){
             viewHolder.imageView.setImageDrawable(null);
         }

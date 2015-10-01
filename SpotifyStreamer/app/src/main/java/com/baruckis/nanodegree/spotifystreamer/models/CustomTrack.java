@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Andrius-Baruckis on 2015-07-10.
+ * Created by Andrius-Baruckis on 2015.
  * http://www.baruckis.com/
  */
 
@@ -15,9 +15,14 @@ import android.os.Parcelable;
 public class CustomTrack implements Parcelable {
 
     private String id;
+    private String artistsNamesList;
     private String trackName;
     private String albumName;
-    private String albumImageUrl;
+    private String albumImageSmallUrl;
+    private String albumImageBigUrl;
+    private CustomImage customImageBig;
+    private String previewStreamUrl;
+    private String externalUrl;
 
     public void setId(String id) {
         this.id = id;
@@ -25,6 +30,14 @@ public class CustomTrack implements Parcelable {
 
     public String getId() {
         return id;
+    }
+
+    public void setArtistsNamesList(String artistsNamesList) {
+        this.artistsNamesList = artistsNamesList;
+    }
+
+    public String getArtistsNamesList() {
+        return artistsNamesList;
     }
 
     public void setTrackName(String trackName) {
@@ -43,22 +56,50 @@ public class CustomTrack implements Parcelable {
         return albumName;
     }
 
-    public void setAlbumImageUrl(String albumImageUrl) {
-        this.albumImageUrl = albumImageUrl;
+    public void setAlbumImageSmallUrl(String albumImageSmallUrl) {
+        this.albumImageSmallUrl = albumImageSmallUrl;
     }
 
-    public String getAlbumImageUrl() {
-        return albumImageUrl;
+    public String getAlbumImageSmallUrl() {
+        return albumImageSmallUrl;
+    }
+
+    public void setCustomImageBig(CustomImage customImageBig) {
+        this.customImageBig = customImageBig;
+    }
+
+    public CustomImage getCustomImageBig() {
+        return customImageBig;
+    }
+
+    public void setPreviewStreamUrl(String previewStreamUrl) {
+        this.previewStreamUrl = previewStreamUrl;
+    }
+
+    public String getPreviewStreamUrl() {
+        return previewStreamUrl;
+    }
+
+    public void setExternalUrl(String externalUrl) {
+        this.externalUrl = externalUrl;
+    }
+
+    public String getExternalUrl() {
+        return externalUrl;
     }
 
     public static final Creator<CustomTrack> CREATOR = new Creator<CustomTrack>() {
         public CustomTrack createFromParcel(Parcel in) {
-            CustomTrack mCustomArtist = new CustomTrack();
-            mCustomArtist.id = in.readString();
-            mCustomArtist.trackName = in.readString();
-            mCustomArtist.albumName = in.readString();
-            mCustomArtist.albumImageUrl = in.readString();
-            return mCustomArtist;
+            CustomTrack customArtist = new CustomTrack();
+            customArtist.id = in.readString();
+            customArtist.artistsNamesList = in.readString();
+            customArtist.trackName = in.readString();
+            customArtist.albumName = in.readString();
+            customArtist.albumImageSmallUrl = in.readString();
+            customArtist.customImageBig = in.readParcelable(CustomImage.class.getClassLoader());
+            customArtist.previewStreamUrl = in.readString();
+            customArtist.externalUrl = in.readString();
+            return customArtist;
         }
 
         public CustomTrack[] newArray(int size) {
@@ -74,8 +115,12 @@ public class CustomTrack implements Parcelable {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(id);
+        out.writeString(artistsNamesList);
         out.writeString(trackName);
         out.writeString(albumName);
-        out.writeString(albumImageUrl);
+        out.writeString(albumImageSmallUrl);
+        out.writeParcelable(customImageBig, flags);
+        out.writeString(previewStreamUrl);
+        out.writeString(externalUrl);
     }
 }

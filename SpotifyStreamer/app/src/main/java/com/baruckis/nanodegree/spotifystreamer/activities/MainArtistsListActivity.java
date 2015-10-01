@@ -3,14 +3,18 @@ package com.baruckis.nanodegree.spotifystreamer.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
+import com.baruckis.nanodegree.spotifystreamer.PlayerService;
 import com.baruckis.nanodegree.spotifystreamer.R;
 import com.baruckis.nanodegree.spotifystreamer.fragments.ArtistTracksListFragment;
 import com.baruckis.nanodegree.spotifystreamer.fragments.ArtistsListFragment;
+import com.baruckis.nanodegree.spotifystreamer.models.CustomTrack;
+
+import java.util.ArrayList;
 
 /**
- * Created by Andrius-Baruckis on 2015-07-10.
+ * Created by Andrius-Baruckis on 2015.
  * http://www.baruckis.com/
  */
 
@@ -30,22 +34,23 @@ import com.baruckis.nanodegree.spotifystreamer.fragments.ArtistsListFragment;
  * {@link ArtistsListFragment.Callbacks} interface
  * to listen for item selections.
  */
-public class MainArtistsListActivity extends AppCompatActivity
-        implements ArtistsListFragment.Callbacks {
-
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private boolean mTwoPane;
+public class MainArtistsListActivity extends BaseActivity
+        implements ArtistsListFragment.Callbacks, ArtistTracksListFragment.Callbacks {
 
     private ArtistsListFragment mArtistsListFragment = null;
     private ArtistTracksListFragment mArtistTracksListFragment = null;
 
+
+    /*
+     * Events
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artists_list);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.mipmap.ic_launcher);
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.artists_list);
         if (fragment != null && fragment instanceof ArtistsListFragment) {
@@ -53,6 +58,11 @@ public class MainArtistsListActivity extends AppCompatActivity
         }
         if (mArtistsListFragment == null) return;
 
+        if (isPlayerDialogFragmentShown()) {
+            getSupportActionBar().setDisplayUseLogoEnabled(false);
+        } else {
+            getSupportActionBar().setDisplayUseLogoEnabled(true);
+        }
 
         if (findViewById(R.id.artist_tracks_list) != null) {
             // The detail container view will be present only in the
@@ -75,6 +85,11 @@ public class MainArtistsListActivity extends AppCompatActivity
             if (searchText != null) {
                 mArtistsListFragment.restoreSearchEditText(searchText);
             }
+        }
+
+        if (isPlayerDialogFragmentShown()) {
+            // Show the Up button in the action bar.
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -106,5 +121,47 @@ public class MainArtistsListActivity extends AppCompatActivity
         if (mArtistTracksListFragment != null) {
             mArtistTracksListFragment.onSearchTextChanged();
         }
+    }
+
+    @Override
+    public void onItemSelected(ArrayList<CustomTrack> tracksList, Integer index) {
+        showPlayerDialogFragment(tracksList, index);
+    }
+
+
+    @Override
+    public void onDestroy() {
+        if (!isChangingConfigurations()) {
+            Intent playIntent = new Intent(this, PlayerService.class);
+            stopService(playIntent);
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isPlayerDialogFragmentShown()) {
+            restoreActionBar();
+            super.onBackPressed();
+        } else {
+            // Not to destroy current activity on back button is pressed.
+            moveTaskToBack(true);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        invalidateOptionsMenu();
     }
 }

@@ -2,15 +2,19 @@ package com.baruckis.nanodegree.spotifystreamer.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.baruckis.nanodegree.spotifystreamer.R;
 import com.baruckis.nanodegree.spotifystreamer.fragments.ArtistTracksListFragment;
+import com.baruckis.nanodegree.spotifystreamer.fragments.PlayerDialogFragment;
+import com.baruckis.nanodegree.spotifystreamer.models.CustomTrack;
+
+import java.util.ArrayList;
 
 /**
- * Created by Andrius-Baruckis on 2015-07-10.
+ * Created by Andrius-Baruckis on 2015.
  * http://www.baruckis.com/
  */
 
@@ -23,10 +27,15 @@ import com.baruckis.nanodegree.spotifystreamer.fragments.ArtistTracksListFragmen
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link ArtistTracksListFragment}.
  */
-public class ArtistTracksListActivity extends AppCompatActivity {
+public class ArtistTracksListActivity extends BaseActivity implements ArtistTracksListFragment.Callbacks {
 
     public static final String ARG_SEARCH_TEXT = "search_text";
 
+    private ArtistTracksListFragment mArtistTracksListFragment;
+
+    /*
+     * Events
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,17 +53,16 @@ public class ArtistTracksListActivity extends AppCompatActivity {
         //
         // http://developer.android.com/guide/components/fragments.html
         //
+        mArtistTracksListFragment = (ArtistTracksListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_artist_tracks_list);
+
         if (savedInstanceState == null) {
-
-            ArtistTracksListFragment artistTracksListFragment = (ArtistTracksListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_artist_tracks_list);
-
-            if (artistTracksListFragment != null) {
+            if (mArtistTracksListFragment != null) {
                 String id = getIntent().getStringExtra(ArtistTracksListFragment.ARG_ACTIVATED_ARTIST_ID);
                 String artistName = getIntent().getStringExtra(ArtistTracksListFragment.ARG_ACTIVATED_ARTIST_NAME);
 
                 if (id == null || artistName == null) return;
 
-                artistTracksListFragment.showSelectedArtistTopTracks(id, artistName);
+                mArtistTracksListFragment.showSelectedArtistTopTracks(id, artistName);
             }
         }
     }
@@ -70,17 +78,44 @@ public class ArtistTracksListActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
+            if (isPlayerDialogFragmentShown()) {
+                mArtistTracksListFragment.restoreActionBar();
+                super.onBackPressed();
+                return true;
+            } else {
+                Intent newIntent = new Intent(this, MainArtistsListActivity.class);
 
-            Intent newIntent = new Intent(this, MainArtistsListActivity.class);
+                String searchText = getIntent().getStringExtra(ARG_SEARCH_TEXT);
+                if (searchText != null) {
+                    newIntent.putExtra(ARG_SEARCH_TEXT, searchText);
+                }
 
-            String searchText = getIntent().getStringExtra(ARG_SEARCH_TEXT);
-            if (searchText != null) {
-                newIntent.putExtra(ARG_SEARCH_TEXT, searchText);
+                NavUtils.navigateUpTo(this, newIntent);
+                return true;
             }
-
-            NavUtils.navigateUpTo(this, newIntent);
-            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isPlayerDialogFragmentShown()) {
+            mArtistTracksListFragment.restoreActionBar();
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onItemSelected(ArrayList<CustomTrack> tracksList, Integer index) {
+        // The device is smaller, so show the fragment fullscreen
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        // For a little polish, specify a transition animation
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        // To make it fullscreen, use the 'content' root view as the container
+        // for the fragment, which is always the root view for the activity
+        PlayerDialogFragment playerDialogFragment = PlayerDialogFragment.newInstance(tracksList, index);
+        transaction.add(android.R.id.content, playerDialogFragment).addToBackStack(null).commit();
+
+        setContentFragment(playerDialogFragment);
     }
 }

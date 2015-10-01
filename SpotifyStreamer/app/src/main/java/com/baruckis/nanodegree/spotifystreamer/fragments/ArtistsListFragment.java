@@ -1,6 +1,6 @@
 package com.baruckis.nanodegree.spotifystreamer.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -12,11 +12,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.baruckis.nanodegree.spotifystreamer.Utils;
-import com.baruckis.nanodegree.spotifystreamer.models.CustomArtist;
 import com.baruckis.nanodegree.spotifystreamer.InfoView;
 import com.baruckis.nanodegree.spotifystreamer.R;
+import com.baruckis.nanodegree.spotifystreamer.Utils;
 import com.baruckis.nanodegree.spotifystreamer.adapters.ArtistArrayAdapter;
+import com.baruckis.nanodegree.spotifystreamer.models.CustomArtist;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * Created by Andrius-Baruckis on 2015-07-10.
+ * Created by Andrius-Baruckis on 2015.
  * http://www.baruckis.com/
  */
 
@@ -106,15 +106,15 @@ public class ArtistsListFragment extends ListFragment {
     *   Events
     * */
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
-        // Activities containing this fragment must implement its callbacks.
-        if (!(activity instanceof Callbacks)) {
-            throw new IllegalStateException("Activity must implement fragment's callbacks.");
+        // Context containing this fragment must implement its callbacks.
+        if (!(context instanceof Callbacks)) {
+            throw new IllegalStateException("Context must implement fragment's callbacks.");
         }
 
-        mCallbacks = (Callbacks) activity;
+        mCallbacks = (Callbacks) context;
     }
 
     @Override
@@ -174,14 +174,12 @@ public class ArtistsListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-
         mSearchEditText.addTextChangedListener(mTextWatcher);
     }
 
     @Override
     public void onPause() {
         mSearchEditText.removeTextChangedListener(mTextWatcher);
-
         super.onPause();
     }
 
@@ -222,8 +220,8 @@ public class ArtistsListFragment extends ListFragment {
 
 
     /*
-   *   Objects
-   * */
+     * Objects
+     * */
     private TextWatcher mTextWatcher = new TextWatcher() {
         Boolean block = false;
 
@@ -279,7 +277,7 @@ public class ArtistsListFragment extends ListFragment {
                 CustomArtist customArtist = new CustomArtist();
                 customArtist.setId(artist.id);
                 customArtist.setName(artist.name);
-                customArtist.setImageUrl(Utils.getImageUrl(artist.images));
+                customArtist.setImageUrl(Utils.getImageSmallUrl(artist.images));
                 mArtistsList.add(customArtist);
             }
 
@@ -292,9 +290,10 @@ public class ArtistsListFragment extends ListFragment {
         }
     };
 
-     /*
-    *   Methods
-    * */
+
+    /*
+     * Methods
+     * */
 
     /**
      * Turns on activate-on-click mode. When this mode is on, list items will be
@@ -341,5 +340,4 @@ public class ArtistsListFragment extends ListFragment {
             }
         });
     }
-
 }

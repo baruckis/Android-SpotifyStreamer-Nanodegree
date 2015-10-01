@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="fragment_player_padding">16dp</dimen>
+    <dimen name="fragment_player_image_button">48dp</dimen>
+    <dimen name="fragment_player_layout_margin_bottom_small">4dp</dimen>
+    <dimen name="fragment_player_layout_margin_bottom_big">8dp</dimen>
+    <dimen name="fragment_player_layout_margin_top">8dp</dimen>
+
+    <dimen name="dialog_padding_horizontal">24dp</dimen>
+    <dimen name="dialog_padding_vertical">24dp</dimen>
+
+</resources>

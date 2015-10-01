@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 /**
- * Created by Andrius-Baruckis on 2015-07-10.
+ * Created by Andrius-Baruckis on 2015.
  * http://www.baruckis.com/
  */
 
@@ -26,10 +26,16 @@ public class ArtistArrayAdapter extends ArrayAdapter<CustomArtist> {
         TextView nameTextView;
     }
 
+    /*
+     * Constructors
+     * */
     public ArtistArrayAdapter(Context context, ArrayList<CustomArtist> artists) {
         super(context, R.layout.list_item_activated_artist, artists);
     }
 
+    /*
+     * Events
+     * */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
