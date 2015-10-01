@@ -20,6 +20,11 @@ You are expected to have passed the Spotify Streamer, Stage 1 project prior to b
 You should have the skills you need to complete this project after completing the Developing Android Apps course, focusing on Lessons 4 and 5.
 
 
+# Screenshots
+![](/SpotifyStreamer/publishing/screenshots/resized/Phone-Samsung-Galaxy-S5-01.png) ![](/SpotifyStreamer/publishing/screenshots/resized/Phone-Samsung-Galaxy-S5-02.png) ![](/SpotifyStreamer/publishing/screenshots/resized/Phone-Samsung-Galaxy-S5-03.png)   ![](/SpotifyStreamer/publishing/screenshots/resized/Phone-Samsung-Galaxy-S5-06.png) ![](/SpotifyStreamer/publishing/screenshots/resized/Phone-Samsung-Galaxy-S5-07.png) ![](/SpotifyStreamer/publishing/screenshots/resized/Tablet-Google-Nexus-7-01.png) ![](/SpotifyStreamer/publishing/screenshots/resized/Tablet-Google-Nexus-7-02.png) 
+![](/SpotifyStreamer/publishing/screenshots/resized/Tablet-Google-Nexus-7-03.png) 
+
+
 #License
 
     Copyright 2015 Andrius Baruckis.
