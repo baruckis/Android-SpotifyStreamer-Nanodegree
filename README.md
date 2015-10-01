@@ -1,4 +1,4 @@
-# "Spotify Preview" 
+# “Spotify Preview” 
 ## Android-Nanodegree-SpotifyStreamer
 
 
