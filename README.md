@@ -1,5 +1,5 @@
 # “Spotify Preview” 
-## Android-Nanodegree-SpotifyStreamer
+## Android-SpotifyStreamer-Nanodegree
 
 
 #### Project 1: Spotify Streamer, Stage 1
