@@ -21,8 +21,8 @@ You should have the skills you need to complete this project after completing th
 
 
 # Screenshots
-![](/publishing/screenshots v1.0/resized/Phone-Samsung-Galaxy-S5-01.png) ![](/publishing/screenshots v1.0/resized/Phone-Samsung-Galaxy-S5-02.png) ![](/publishing/screenshots v1.0/resized/Phone-Samsung-Galaxy-S5-03.png)   ![](/publishing/screenshots v1.0/resized/Phone-Samsung-Galaxy-S5-06.png) ![](/publishing/screenshots v1.0/resized/Phone-Samsung-Galaxy-S5-07.png) ![](/publishing/screenshots v1.0/resized/Tablet-Google-Nexus-7-01.png) ![](/publishing/screenshots v1.0/resized/Tablet-Google-Nexus-7-02.png) 
-![](/publishing/screenshots v1.0/resized/Tablet-Google-Nexus-7-03.png) 
+![](/publishing/screenshots-v1.0/resized/Phone-Samsung-Galaxy-S5-01.png) ![](/publishing/screenshots-v1.0/resized/Phone-Samsung-Galaxy-S5-02.png) ![](/publishing/screenshots-v1.0/resized/Phone-Samsung-Galaxy-S5-03.png)   ![](/publishing/screenshots-v1.0/resized/Phone-Samsung-Galaxy-S5-06.png) ![](/publishing/screenshots-v1.0/resized/Phone-Samsung-Galaxy-S5-07.png) ![](/publishing/screenshots-v1.0/resized/Tablet-Google-Nexus-7-01.png) ![](/publishing/screenshots-v1.0/resized/Tablet-Google-Nexus-7-02.png) 
+![](/publishing/screenshots-v1.0/resized/Tablet-Google-Nexus-7-03.png) 
 
 
 #License
