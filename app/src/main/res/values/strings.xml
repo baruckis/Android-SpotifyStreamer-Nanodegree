@@ -1,0 +1,96 @@
+<!--
+  ~ Copyright 2017 Andrius Baruckis www.baruckis.com
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <string name="app_name">"Spotify Preview"</string>
+
+    <string name="toast_spotify_authorization_error_msg_error">"Oops! Authorization error!"</string>
+    <string name="snackbar_spotify_authenticate_msg_error">"You are required to authenticate with your Spotify account in order to use this app."</string>
+    <string name="snackbar_spotify_authenticate_msg_action">"Do It"</string>
+    <string name="toast_spotify_no_preview_msg_error">"No preview available!"</string>
+    <string name="toast_data_source_msg_error">"Oops! Error!"</string>
+    <string name="log_data_source_msg_error">"Error setting data source!"</string>
+    <string name="toast_preparing_track_msg_error">"Oops! Error while preparing track!"</string>
+
+    <string name="info_msg_empty_artists_list_init">"Type to search for your favourite artist."</string>
+    <string name="info_msg_empty_artists_list">"Oops! No such artist found."</string>
+    <string name="info_msg_empty_artist_top_tracks_list">"Oops! We couldn't find any top tracks for your selected artist."</string>
+    <string name="info_msg_error">"Sorry, there was an error! Please try again."</string>
+    <string name="info_btn_try_again">"Try Again"</string>
+
+    <string name="action_btn_now_playing">"Now Playing"</string>
+    <string name="action_btn_share">"Share"</string>
+    <string name="action_settings">"Settings"</string>
+
+    <string name="title_list_preference">"Country"</string>
+    <string name="title_switch_preference_off">"Hide notification"</string>
+    <string name="title_switch_preference_on">"Show notification"</string>
+    <string name="summary_switch_preference">"Toggle showing notification controls on the drawer and lock screen."</string>
+
+    <plurals name="title_selected_artist_top_tracks">
+        <item quantity="one">"Top %d Track"</item>
+        <item quantity="other">"Top %d Tracks"</item>
+    </plurals>
+
+    <string name="album_image_content_description">"Album image"</string>
+    <string name="previous_button_content_description">"Previous button"</string>
+    <string name="play_pause_button_content_description">"Play pause"</string>
+    <string name="next_button_content_description">"Next button"</string>
+
+    <string name="title_settings">"Settings"</string>
+    <string name="group_general_key">"group_general_key"</string>
+    <string name="group_general_title">"General"</string>
+    <string name="list_preference_country_code_key">"list_preference_country_code_key"</string>
+    <string name="switch_preference_notification_key">"switch_preference_notification_key"</string>
+    <string name="group_about_key">"group_about_key"</string>
+    <string name="group_about_title">"About"</string>
+    <string name="preference_source_key">"preference_source_key"</string>
+    <string name="preference_source_title">"Get source"</string>
+    <string name="preference_source_summary">"GitHub"</string>
+    <string name="preference_source_url">"https://github.com/baruckis/Android-Nanodegree-SpotifyStreamer"</string>
+    <string name="preference_author_key">"preference_author_key"</string>
+    <string name="preference_author_title">"Author"</string>
+    <string name="preference_author_summary">"Andrius Baruckis - www.baruckis.com"</string>
+    <string name="preference_author_url">"http://www.baruckis.com"</string>
+    <string name="preference_licence_key">"preference_licence_key"</string>
+    <string name="preference_licence_title">"Licence"</string>
+    <string name="preference_licence_summary">"Copyright &#169;"</string>
+    <string name="preference_version_key">"preference_version_key"</string>
+    <string name="preference_version_title">@string/app_name</string>
+    <string name="preference_version_summary">"Version: "</string>
+
+    <string name="OK">"OK"</string>
+
+    <!-- About -->
+    <string name="licence_title">"Licence"</string>
+    <string name="licence_body"><![CDATA[
+<b>%1$s</b>
+<br/>Version: %2$s<br/><br/>
+Copyright © 2017 Andrius Baruckis.
+<br/><br/>Licensed under the Apache License, Version 2.0 (the "License");
+You may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+<br/><br/><a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+
+<br/><br/>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+<br/>See the License for the specific language governing permissions and
+limitations under the License.
+]]></string>
+
+</resources>

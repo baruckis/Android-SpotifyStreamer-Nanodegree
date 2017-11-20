@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2017 Andrius Baruckis www.baruckis.com
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="@string/group_general_key"
+        android:title="@string/group_general_title">
+        <ListPreference
+            android:icon="@drawable/ic_earth_grey600_24dp"
+            android:key="@string/list_preference_country_code_key"
+            android:title="@string/title_list_preference" />
+        <SwitchPreference
+            android:defaultValue="@bool/default_show_notification"
+            android:key="@string/switch_preference_notification_key"
+            android:summary="@string/summary_switch_preference" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="@string/group_about_key"
+        android:title="@string/group_about_title">
+        <Preference
+            android:icon="@drawable/ic_github_circle_grey600_24dp"
+            android:key="@string/preference_source_key"
+            android:summary="@string/preference_source_summary"
+            android:title="@string/preference_source_title" />
+        <Preference
+            android:icon="@drawable/ic_account_grey600_24dp"
+            android:key="@string/preference_author_key"
+            android:summary="@string/preference_author_summary"
+            android:title="@string/preference_author_title" />
+        <Preference
+            android:icon="@drawable/ic_certificate_grey600_24dp"
+            android:key="@string/preference_licence_key"
+            android:summary="@string/preference_licence_summary"
+            android:title="@string/preference_licence_title" />
+        <Preference
+            android:icon="@drawable/ic_spotify_grey600_24dp"
+            android:key="@string/preference_version_key"
+            android:selectable="false"
+            android:summary="@string/preference_version_summary"
+            android:title="@string/preference_version_title" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
