@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Default boolean values -->
-<resources>
-    <bool name="default_show_notification">true</bool>
-    <bool name="large_layout">false</bool>
-</resources>
